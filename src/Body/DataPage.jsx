@@ -1,26 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import Container from 'react-bootstrap/Container';
+import Button from 'react-bootstrap/Button';
+import OrderWindow from './OrderWindow';
 
 function DataPage({ shipmentData }) {
-    // Check if shipmentData is defined and is an array
+    const [selectedOrder, setSelectedOrder] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+
     if (!Array.isArray(shipmentData)) {
         return <div>No shipment data available.</div>;
     }
 
-    const data = shipmentData.map((item, index) => ({
+    const data = shipmentData.map((item) => ({
         consignee: item.consignee,
         customer: item.customer,
         date: item.date,
         orderNo: item.orderNo,
         status: item.status,
         trackingNo: item.trackingNo,
-        // You can add more properties here if needed
     }));
+
+    const handleInfoClick = (order) => {
+        setSelectedOrder(order);
+        setShowModal(true);
+    };
 
     return (
         <Container>
             <h3 className='m-5'>SHIPMENT DETAILS</h3>
+
             <Table striped bordered hover>
                 <thead>
                     <tr>
@@ -30,21 +39,28 @@ function DataPage({ shipmentData }) {
                         <th>consignee</th>
                         <th>trackingNo</th>
                         <th>status</th>
+                        <th>_</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map(({ consignee, customer, date, orderNo, status, trackingNo }, index) => (
+                    { data.map((order, index) => (
                         <tr key={index}>
-                            <td>{orderNo}</td>
-                            <td>{date}</td>
-                            <td>{customer}</td>
-                            <td>{consignee}</td>
-                            <td>{trackingNo}</td>
-                            <td>{status}</td>
+                            <td>{order.orderNo}</td>
+                            <td>{order.date}</td>
+                            <td>{order.customer}</td>
+                            <td>{order.consignee}</td>
+                            <td>{order.trackingNo}</td>
+                            <td>{order.status}</td>
+                            <td>
+                                <Button variant="info" onClick={() => handleInfoClick(order)}>Info</Button>
+                                <Button variant="danger">X</Button>{' '}
+                            </td>
                         </tr>
                     ))}
                 </tbody>
             </Table>
+
+            <OrderWindow show={showModal} onHide={() => setShowModal(false)} selectedOrder={selectedOrder} />
         </Container>
     );
 }

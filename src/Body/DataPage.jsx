@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { setSelectedOrder, setShowModal } from '../services/stateServices';
 import Table from 'react-bootstrap/Table';
 import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
 import OrderWindow from './OrderWindow';
 
-function DataPage({ shipmentData }) {
-    const [selectedOrder, setSelectedOrder] = useState(false);
-    const [showModal, setShowModal] = useState(false);
+function DataPage() {
+    const selectedOrder = useSelector((state) => state.selectedOrder);
+    const shipmentData = useSelector((state) => state.shipmentData);
+    const showModal = useSelector((state) => state.showModal);
+    const dispatch = useDispatch();
 
     if (!Array.isArray(shipmentData)) {
         return <div>No shipment data available.</div>;
@@ -22,8 +25,8 @@ function DataPage({ shipmentData }) {
     }));
 
     const handleInfoClick = (order) => {
-        setSelectedOrder(order);
-        setShowModal(true);
+        dispatch(setSelectedOrder(order));
+        dispatch(setShowModal(true));
     };
 
     return (
@@ -43,7 +46,7 @@ function DataPage({ shipmentData }) {
                     </tr>
                 </thead>
                 <tbody>
-                    { data.map((order, index) => (
+                    {data.map((order, index) => (
                         <tr key={index}>
                             <td>{order.orderNo}</td>
                             <td>{order.date}</td>
@@ -60,7 +63,7 @@ function DataPage({ shipmentData }) {
                 </tbody>
             </Table>
 
-            <OrderWindow show={showModal} onHide={() => setShowModal(false)} selectedOrder={selectedOrder} />
+            <OrderWindow show={showModal} onHide={() => dispatch( setShowModal(false))} selectedOrder={selectedOrder} />
         </Container>
     );
 }

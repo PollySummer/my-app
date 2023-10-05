@@ -4,8 +4,10 @@ import Form from 'react-bootstrap/Form';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import { useSelector } from 'react-redux';
 
-function OrderWindow({ show, onHide, selectedOrder }) {
+function OrderWindow({ show, onHide }) {
+  const selectedOrder = useSelector((state) => state.selectedOrder);
   return (
     <Modal show={show} onHide={onHide}>
       <Modal.Header closeButton>

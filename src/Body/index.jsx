@@ -1,25 +1,27 @@
 import DataPage from "./DataPage";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { getShipmentData } from "../services/apiServices";
+import { setShipmentData } from "../services/stateServices";
+import { useDispatch } from "react-redux";
 
 function Body() {
-    const [shipmentData, setShipmentData] = useState(null);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         try {
             getShipmentData().then(data => {
                 console.log(data);
-                setShipmentData(data);
+                dispatch(setShipmentData(data));
             })
         } catch (error) {
             console.log(error);
         }
 
-    }, []);
+    }, [dispatch]);
 
     return (
         <>
-            <DataPage shipmentData={shipmentData} />
+            <DataPage />
         </>
     )
 }
